@@ -13,5 +13,5 @@ export default function Main(props){
 }
 
 Main.propTypes = {
-    props: PropTypes.element.isRequired
+    props: PropTypes.element
   }
