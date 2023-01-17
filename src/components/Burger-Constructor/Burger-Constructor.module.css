@@ -1,0 +1,50 @@
+.burgerContructorList{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 530px; 
+}
+
+.burgerContructorList:last-child{
+    align-self: center;
+}
+
+.wrapperList{
+    composes: burgerContructorList;
+    height: 370px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    padding: 0 8px 0 0;
+}
+
+.burgerContructorList::-webkit-scrollbar {
+    width: 8px;
+    background-color: #2F2F37;
+}
+
+.burgerContructorList::-webkit-scrollbar-thumb {
+    background-color: #8585AD;
+}
+
+.result{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.icon{
+    vertical-align: top;
+    display: inline-block;
+    margin-left:8px;
+}
+
+.wrapperElement{
+    display: flex; 
+    width: 100%; 
+    max-width: 568px;  
+}
+
+.element{
+    margin-right: 8px;
+    align-self: center;
+}

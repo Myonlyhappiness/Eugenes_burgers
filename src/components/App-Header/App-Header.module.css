@@ -1,0 +1,32 @@
+.header {
+  background-color: #1c1c21;
+  min-width: 1280px;
+}
+
+.menu {
+  width: 1280px;
+  margin: auto;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.menu_element {
+  display: flex;
+  list-style-type: none;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.icon {
+  margin: 0 8px 0;
+}
+
+.logo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+nav ul:last-child {
+  margin-left: auto;
+}

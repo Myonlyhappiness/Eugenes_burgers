@@ -1,0 +1,35 @@
+.modal {
+  display: flex;
+  position: absolute;
+  width: 100vw;
+  top: 0;
+  bottom: 0;
+}
+
+.modalContent {
+  max-width: 720px;
+  width: 100%;
+  padding: 40px 40px 60px;
+  position: relative;
+  margin: auto;
+  border-radius: 40px;
+  background-color: #1c1c21;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.icon {
+  transition: all 0.3s ease-in-out;
+  margin: 20px 0;
+}
+
+.icon:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}

@@ -1,0 +1,32 @@
+.ingredients {
+  max-width: 600px;
+}
+
+.tabs {
+  display: flex;
+}
+
+.ingredientsList {
+  width: 100%;
+  height: 538px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+}
+
+.ingredientsList::-webkit-scrollbar {
+  width: 8px;
+  background-color: #2f2f37;
+}
+
+.ingredientsList::-webkit-scrollbar-thumb {
+  background-color: #8585ad;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 32px 0;
+  position: relative;
+}

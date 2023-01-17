@@ -1,0 +1,22 @@
+.main {
+  text-align: center;
+  max-width: 520px;
+  margin: auto;
+}
+
+.name {
+  margin: 16px 0 32px;
+}
+
+.nutrients {
+  list-style-type: none;
+  display: flex;
+  justify-content: space-between;
+  padding: 0;
+  margin: 0;
+}
+
+.nutrientsElement {
+  max-width: 120px;
+  color: #8585ad;
+}
