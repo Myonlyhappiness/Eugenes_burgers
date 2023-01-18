@@ -1,51 +1,50 @@
-import React from 'react';
-import './App.css';
-import AppHeader from '../App-Header/App-Header';
-import BurgerIngredients from '../Burger-Ingredients/Burger-Ingredients';
-import BurgerConstructor from '../Burger-Constructor/Burger-Constructor';
-import Main from '../Main/Main'
-
+import React from "react";
+import appStytles from "./App.module.css";
+import AppHeader from "../App-Header/App-Header";
+import BurgerIngredients from "../Burger-Ingredients/Burger-Ingredients";
+import BurgerConstructor from "../Burger-Constructor/Burger-Constructor";
+import Main from "../Main/Main";
 
 function App() {
-
-  const [state, setState] = React.useState({ 
+  const [state, setState] = React.useState({
     data: [],
     isLoading: false,
-    hasError: false
-  })
+    hasError: false,
+    textError: null
+  });
 
-
-  React.useEffect(() => {getIngredient()}, [])
+  React.useEffect(() => {
+    getIngredient();
+  }, []);
   const getIngredient = () => {
     setState({ ...state, hasError: false, isLoading: true });
-    const ingredientsData = 'https://norma.nomoreparties.space/api/ingredients'
+    const ingredientsData = "https://norma.nomoreparties.space/api/ingredients";
     fetch(ingredientsData)
-      .then(res => res.json())
+      .then(res => res.ok ? res.json() : Promise.reject(`Ошибка ${res.status}`))
       .then(data => setState({ ...state, ...data, isLoading: false }))
-      .catch(e => {
-        setState({ ...state, hasError: true, isLoading: false })
+      .catch(error => {
+        console.log(error);
+        setState({ ...state, hasError: true, textError: error, isLoading: false });
       });
-  }
+  };
 
-  const {data, isLoading, hasError} = state
+  const { data, isLoading, textError, hasError } = state;
 
   return (
-    <div className='page'>
-     <AppHeader/>
-     <Main>
-      {isLoading && 'Ингредиенты подгружаются'}
-      {hasError && 'Ошибочка вышла'}
-      {!isLoading &&
-          !hasError &&
-          data.length &&
+    <div className={appStytles.page}>
+      <AppHeader />
+      <Main>
+        {isLoading && "Ингредиенты подгружаются"}
+        {hasError && textError}
+        {!isLoading && !hasError && data.length && (
           <>
-          <BurgerIngredients ingredients={data}/>
-          <BurgerConstructor ingredients={data}/>
+            <BurgerIngredients ingredients={data} />
+            <BurgerConstructor ingredients={data} />
           </>
-          }
-     </Main>
-     </div>
-   );
+        )}
+      </Main>
+    </div>
+  );
 }
 
 export default App;
