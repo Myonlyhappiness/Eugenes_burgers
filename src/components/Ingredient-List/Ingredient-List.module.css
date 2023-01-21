@@ -1,0 +1,16 @@
+.ingredient {
+  text-align: center;
+  position: relative;
+  width: 272px;
+  box-sizing: border-box;
+}
+
+.icon {
+  vertical-align: top;
+  display: inline-block;
+  margin-left: 8px;
+}
+
+.ingredient:hover {
+  cursor: pointer;
+}
