@@ -45,10 +45,10 @@ export default function BurgerIngredients({ ingredients }) {
         <div className={`pl-4 pt-6 pb-10 ${ingredientsStyles.wrapper}`}>
           <IngredientList type="main" ingredients={ingredients} handler={handleActiveModal} />
         </div>
-        {state.active && <Modal {...state} handler={handleActiveModal} title="Детали ингредиента">
+        {state.active && (<Modal handler={handleActiveModal} title="Детали ингредиента">
           <IngredientDetails item={state.item} />
         </Modal>
-        }
+        )}
       </div>
     </section>
   );

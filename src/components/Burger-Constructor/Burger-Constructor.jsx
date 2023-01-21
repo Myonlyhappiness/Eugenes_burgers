@@ -63,7 +63,7 @@ export default function BurgerConstructor({ ingredients }) {
           Оформить заказ
         </Button>
       </div>
-      {state.active && (<Modal {...state} handler={handleActiveModal}>
+      {state.active && (<Modal handler={handleActiveModal}>
         <OrderDetails />
       </Modal>
       )}
