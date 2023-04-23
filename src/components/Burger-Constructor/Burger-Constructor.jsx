@@ -1,20 +1,22 @@
 import React from 'react';
 import Modal from '../Modal/Modal'
-import PropTypes from 'prop-types';
 import constructorStyles from './Burger-Constructor.module.css'
 import { ConstructorElement, Button, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import OrderDetails from '../Order-Details/Order-Details'
+import {useSelector, useDispatch} from 'react-redux';
+import {OPEN_MODAL} from '../../services/actions/Ingredient-List'
+import {createOrder} from '../../services/actions/Order-Details'
 
-export default function BurgerConstructor({ ingredients }) {
-  const [state, setActive] = React.useState({ active: false, event: null });
 
-
-  const handleActiveModal = (event) => {
+export default function BurgerConstructor() {
+  const [ingredients] = useSelector(store => store.menu.constructorItems)
+  const {modalActive, currentIngredient} = useSelector(store => store.modal)
+  const ingredientsID = ingredients.map(item => item._id)
+  const dispatch = useDispatch();
+  const makeOrder = (event) => {
     event.stopPropagation();
-    setActive({
-      ...state,
-      active: !state.active,
-    });
+    dispatch(createOrder(ingredientsID));
+    dispatch({type: OPEN_MODAL})
   }
 
   return (
@@ -30,14 +32,12 @@ export default function BurgerConstructor({ ingredients }) {
         </div>
 
         <div className={constructorStyles.wrapperList}>
-
           {ingredients.map(item => {
             return item.type != "bun" && (
               <div className={constructorStyles.wrapperElement} key={item._id}>
                 <div className={constructorStyles.element}>
                   <DragIcon type="primary" />
                 </div>
-
                 <ConstructorElement
                   text={item.name}
                   price={item.price}
@@ -58,20 +58,16 @@ export default function BurgerConstructor({ ingredients }) {
         </div>
       </div>
       <div className={`mr-2 ${constructorStyles.result}`}>
-        <p className="mr-10 text text_type_digits-medium">610<span className={constructorStyles.icon}><CurrencyIcon type="primary" /></span></p>
-        <Button htmlType="button" type="primary" size="large" onClick={handleActiveModal}>
+        <p className="mr-10 text text_type_digits-medium">{ingredients.reduce((acc, item) => acc + item.price, 0)}<span className={constructorStyles.icon}><CurrencyIcon type="primary" /></span></p>
+        <Button htmlType="button" type="primary" size="large" onClick={(event) => makeOrder(event)}>
           Оформить заказ
         </Button>
       </div>
-      {state.active && (<Modal handler={handleActiveModal}>
+      {modalActive && !currentIngredient && (<Modal>
         <OrderDetails />
       </Modal>
       )}
     </section>
   )
 
-}
-
-BurgerConstructor.propTypes = {
-  ingredients: PropTypes.array
 }

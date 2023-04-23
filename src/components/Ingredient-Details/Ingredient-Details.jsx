@@ -1,7 +1,7 @@
 import ingredientDetailsStyles from './Ingredient-Details.module.css'
 import PropTypes from 'prop-types';
 
-export default function IngredientDetails({ item }) {
+export default function IngredientDetails({item}) {
     return (
         <div className={ingredientDetailsStyles.main}>
             <img src={item.image_large} className={ingredientDetailsStyles.image} />

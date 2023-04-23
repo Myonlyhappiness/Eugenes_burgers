@@ -21,7 +21,6 @@ export default function AppHeader() {
           <li className="text text_type_main-default text_color_inactive">Личный кабинет</li>
         </ul>
       </nav>
-
     </header>
   );
 
