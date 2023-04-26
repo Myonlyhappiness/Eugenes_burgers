@@ -4,13 +4,12 @@ import {
   CurrencyIcon,
   Counter,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch} from "react-redux";
 import { OPEN_MODAL } from "../../services/actions/Ingredient-List";
 import { useDrag } from "react-dnd";
 
 export function Ingredient({ item }) {
-  const ingredients = useSelector((store) => store.menu.constructorItems);
-
+  
   const dispatch = useDispatch();
   const [, ingredientRef] = useDrag({
     type: "items",
