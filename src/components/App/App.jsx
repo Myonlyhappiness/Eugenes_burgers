@@ -6,6 +6,8 @@ import BurgerConstructor from "../Burger-Constructor/Burger-Constructor";
 import Main from "../Main/Main";
 import { useDispatch, useSelector } from 'react-redux';
 import { getIngredients } from '../../services/actions/Ingredient-List'
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 
 function App() {
   const dispatch = useDispatch();
@@ -20,6 +22,7 @@ function App() {
     <div className={appStytles.page}>
       <AppHeader />
       <Main>
+      <DndProvider backend={HTML5Backend}>
         {itemsRequest && "Ингредиенты подгружаются"}
         {itemsFailed && textError}
         {!itemsRequest && !itemsFailed && ingredients.length && (
@@ -28,7 +31,9 @@ function App() {
             <BurgerConstructor/>
           </>
         )}
+        </DndProvider>
       </Main>
+      
     </div>
   );
 }

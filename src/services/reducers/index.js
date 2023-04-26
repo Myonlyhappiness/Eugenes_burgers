@@ -1,7 +1,7 @@
-import { combineReducers } from 'redux';
-import { menuReducer} from './Ingredient-List' 
-import { handleActiveModal } from './Modal'
-import { orderReducer } from './Order-Details'
+import { combineReducers } from "redux";
+import { menuReducer } from "./Ingredient-List";
+import { handleActiveModal } from "./Modal";
+import { orderReducer } from "./Order-Details";
 
 export const initialState = {
   ingredients: [],
@@ -12,16 +12,15 @@ export const initialState = {
   orderFailed: false,
   orderInfo: {},
 
-  textError: '',
+  textError: "",
   constructorItems: [],
   currentIngredient: "",
-  currentTab: 'one',
+  currentTab: "one",
   modalActive: false,
- 
-}
+};
 
 export const rootReducer = combineReducers({
-    menu: menuReducer,
-    order: orderReducer,
-    modal: handleActiveModal
-  });
+  menu: menuReducer,
+  order: orderReducer,
+  modal: handleActiveModal,
+});

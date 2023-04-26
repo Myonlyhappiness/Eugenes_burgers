@@ -1,0 +1,14 @@
+.wrapperElement{
+    display: flex; 
+    width: 100%; 
+    max-width: 568px;  
+}
+
+.wrapperElement:hover{
+    cursor: grab;
+ }
+
+.element{
+    margin-right: 8px;
+    align-self: center;
+}
