@@ -23,7 +23,7 @@ const initialState = {
   itemsFailed: false,
   textError: "",
   constructorItems: [],
-  currentIngredient: {},
+  currentIngredient: "",
   modalActive: false,
 }
 
@@ -58,7 +58,7 @@ export const menuReducer = (state = initialState, action) => {
       return {
         ...state,
         modalActive: true,
-        currentIngredient: action.item ? action.item : {},
+        currentIngredient: action.item ? action.item : "",
       };
     }
 
