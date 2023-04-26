@@ -2,9 +2,16 @@ import {
   GET_INFO_ORDER_REQUEST,
   GET_INFO_ORDER_FAILED,
   GET_INFO_ORDER_SUCCESS,
+  CLEAR_INFO_ORDER
 } from "../actions/Order-Details";
 
-import { initialState } from "./index";
+const initialState = {
+  orderRequest: false,
+  orderFailed: false,
+  orderInfo: {},
+  textError: "",
+
+};
 
 export const orderReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -28,7 +35,15 @@ export const orderReducer = (state = initialState, action) => {
         ...state,
         orderFailed: true,
         orderRequest: false,
+        orderInfo: {},
         textError: action.error,
+      };
+    }
+
+    case CLEAR_INFO_ORDER: {
+      return {
+        ...state,
+        orderInfo: {}
       };
     }
 

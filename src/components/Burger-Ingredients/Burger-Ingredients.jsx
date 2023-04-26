@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import ingredientsStyles from "./Burger-Ingredients.module.css";
 import IngredientList from "../Ingredient-List/Ingredient-List";
@@ -9,14 +8,12 @@ import { useSelector } from "react-redux";
 import { useInView } from "react-intersection-observer";
 
 export default function BurgerIngredients() {
+  const menu = (store) => store.menu
   const [bun, scrollToBuns] = useInView({ threshold: 0.1 });
   const [sauce, scrollToSauces] = useInView({ threshold: 0.2 });
   const [main, scrollToMain] = useInView({ threshold: 0.2 });
-
   const [current, setCurrent] = React.useState("one");
-  const { modalActive, currentIngredient } = useSelector(
-    (store) => store.modal
-  );
+  const { modalActive, currentIngredient } = useSelector(menu);
 
   React.useEffect(() => {
     if (scrollToBuns) {
@@ -62,7 +59,7 @@ export default function BurgerIngredients() {
           <IngredientList type="main" />
         </div>
         {modalActive && currentIngredient && (
-          <Modal title="Детали ингредиента">
+          <Modal title="Детали ингредиента" type="ingredient">
             <IngredientDetails item={currentIngredient} />
           </Modal>
         )}

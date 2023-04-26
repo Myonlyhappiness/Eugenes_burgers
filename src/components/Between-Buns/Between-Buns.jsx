@@ -6,15 +6,16 @@ import { useDrop,  useDrag} from 'react-dnd';
 import {useDispatch, useSelector} from 'react-redux';
 import {DELETE_ITEM, DECREASE_COUNTER, MOVING_ITEM} from '../../services/actions/Ingredient-List'
 
-export default function BetweenBuns({item, id, index, handleState}) {
+export default function BetweenBuns({item, id, index, handleButtonState}) {
+  const constructorItems = (store) => store.menu.constructorItems
   const ref = React.useRef(null);
   const dispatch = useDispatch();
-  const ingredients = useSelector((store) => store.menu.constructorItems);
+  const ingredients = useSelector(constructorItems);
 
   const deleteItem = (index, item) =>{
     dispatch({ type: DELETE_ITEM, index})
     dispatch({ ...item, type: DECREASE_COUNTER})
-    ingredients.length === 2 && handleState(true);
+    ingredients.length === 2 && handleButtonState(true);
    }
 
    const [, drop] = useDrop({
@@ -81,5 +82,6 @@ return (
 BetweenBuns.propTypes = {
   item: PropTypes.object.isRequired,
   id: PropTypes.string.isRequired,
-  index: PropTypes.number.isRequired
+  index: PropTypes.number.isRequired,
+  handleButtonState: PropTypes.func.isRequired
 };

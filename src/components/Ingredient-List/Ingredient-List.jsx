@@ -3,7 +3,8 @@ import { useSelector } from "react-redux";
 import { Ingredient } from "../Ingredient/Ingredient";
 
 export default function IngredientList({ type }) {
-  const ingredients = useSelector((store) => store.menu.ingredients);
+  const getIngredients = (store) => store.menu.ingredients
+  const ingredients = useSelector(getIngredients);
 
   return ingredients.map((item) => {
     if (item.type === type) {

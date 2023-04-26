@@ -1,5 +1,4 @@
 import update from "immutability-helper";
-
 import {
   GET_ITEMS_FAILED,
   GET_ITEMS_REQUEST,
@@ -12,9 +11,22 @@ import {
   INCREASE_COUNTER_BUN,
   DECREASE_COUNTER_BUN,
   MOVING_ITEM,
+  CLEAR_CART,
+  OPEN_MODAL,
+  CLOSE_MODAL,
+  RESET_COUNTERS
 } from "../actions/Ingredient-List";
 
-import { initialState } from "./index";
+const initialState = {
+  ingredients: [],
+  itemsRequest: false,
+  itemsFailed: false,
+  textError: "",
+  constructorItems: [],
+  currentIngredient: {},
+  modalActive: false,
+}
+
 
 export const menuReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -39,6 +51,22 @@ export const menuReducer = (state = initialState, action) => {
         itemsFailed: true,
         itemsRequest: false,
         textError: action.error,
+      };
+    }
+    
+    case OPEN_MODAL: {
+      return {
+        ...state,
+        modalActive: true,
+        currentIngredient: action.item ? action.item : {},
+      };
+    }
+
+    case CLOSE_MODAL: {
+      return {
+        ...state,
+        modalActive: false,
+        currentIngredient: "",
       };
     }
 
@@ -123,6 +151,20 @@ export const menuReducer = (state = initialState, action) => {
       };
     }
 
+
+    case RESET_COUNTERS: {
+      return {
+        ...state,
+        ingredients: [
+          ...state.ingredients.map((ingredient) =>
+            ingredient.__v !== 0
+              ? { ...ingredient, __v: 0 }
+              : ingredient
+          ),
+        ],
+      };
+    }
+
     case MOVING_ITEM:
       return {
         ...state,
@@ -132,6 +174,12 @@ export const menuReducer = (state = initialState, action) => {
             [action.hoverIndex, 0, state.constructorItems[action.dragIndex]],
           ],
         }),
+      };
+
+      case CLEAR_CART:
+      return {
+        ...state,
+        constructorItems: []
       };
 
     default: {

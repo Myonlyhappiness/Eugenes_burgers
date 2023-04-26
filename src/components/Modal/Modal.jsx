@@ -4,13 +4,26 @@ import PropTypes from "prop-types";
 import modalStyles from "./Modal.module.css";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import ModalOverlay from "../Modal-Overlay/Modal-Overlay";
-import { useDispatch, useSelector } from "react-redux";
-import { CLOSE_MODAL } from "../../services/actions/Ingredient-List";
+import { useDispatch} from "react-redux";
+import { CLOSE_MODAL, CLEAR_CART, RESET_COUNTERS} from "../../services/actions/Ingredient-List";
+import { CLEAR_INFO_ORDER} from "../../services/actions/Order-Details"; 
+
 const modalRoot = document.getElementById("modal-root");
 
-export default function Modal({ children, title }) {
+export default function Modal({ children, title, handleButtonState, type}) {
   const dispatch = useDispatch();
-  const closeModal = (event) => dispatch({ type: CLOSE_MODAL, event });
+  const closeModal = (event) => {
+    if(type === "order"){
+    dispatch({ type: CLOSE_MODAL, event })
+    dispatch({ type: CLEAR_INFO_ORDER, event })
+    dispatch({ type: CLEAR_CART})
+    dispatch({ type: RESET_COUNTERS})
+    handleButtonState(true);
+  }
+  else {
+    dispatch({ type: CLOSE_MODAL, event })
+  }
+  };
 
   React.useEffect(() => {
     const closeByKey = (event) => {
@@ -29,13 +42,13 @@ export default function Modal({ children, title }) {
       <div className={modalStyles.modalContent}>
         <div className={modalStyles.header}>
           <p className="text text_type_main-large">{title}</p>
-          <div className={modalStyles.icon} onClick={closeModal}>
+          <div className={modalStyles.icon} onClick={(event) => closeModal(event)}>
             <CloseIcon type="primary" />
           </div>
         </div>
         {children}
       </div>
-      <ModalOverlay />
+      <ModalOverlay closeModal={closeModal}/>
     </div>,
     modalRoot
   );
@@ -44,4 +57,6 @@ export default function Modal({ children, title }) {
 Modal.propTypes = {
   title: PropTypes.string,
   children: PropTypes.element,
+  type: PropTypes.string.isRequired,
+  handleButtonState: PropTypes.func
 };

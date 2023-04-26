@@ -22,11 +22,11 @@ import { addIngredient } from "../../services/actions/Ingredient-List";
 import { v4 as uuidv4 } from "uuid";
 
 export default function BurgerConstructor() {
-  const [buttonState, handleState] = useState(true);
+  const menu = (store) => store.menu
+  const [buttonState, handleButtonState] = useState(true);
   const ingredients = useSelector((store) => store.menu.constructorItems);
-  const { modalActive, currentIngredient } = useSelector(
-    (store) => store.modal
-  );
+  const { modalActive, currentIngredient } = useSelector(menu);
+  
   const ingredientsID = ingredients.map((item) => item._id);
   const dispatch = useDispatch();
   const makeOrder = (event) => {
@@ -35,11 +35,13 @@ export default function BurgerConstructor() {
     dispatch({ type: OPEN_MODAL });
   };
 
-  const totalPrice = (ingredients) => {
+  const totalPrice = React.useMemo(
+    (() => {
     return ingredients.reduce((acc, item) => {
       return item.type === "bun" ? acc + item.price * 2 : acc + item.price;
     }, 0);
-  };
+  }), [ingredients] 
+  )
 
   const [, dropTarget] = useDrop({
     accept: "items",
@@ -49,11 +51,11 @@ export default function BurgerConstructor() {
         dispatch(addIngredient({ ...item, id: uuidv4() }));
         dispatch({ ...item, type: INCREASE_COUNTER_BUN });
         dispatch({ ...item, type: DECREASE_COUNTER_BUN });
-        ingredients.some((elem) => elem.type !== "bun") && handleState(false);
+        ingredients.length >= 1 && ingredients.some((elem) => elem.type !== "bun") && handleButtonState(false);
       } else {
         dispatch(addIngredient({ ...item, id: uuidv4() }));
         dispatch({ ...item, type: INCREASE_COUNTER });
-        ingredients.some((elem) => elem.type === "bun") && handleState(false);
+        ingredients.some((elem) => elem.type === "bun") && handleButtonState(false);
       }
     },
   });
@@ -78,7 +80,7 @@ export default function BurgerConstructor() {
                     item={item}
                     index={index}
                     id={item.id}
-                    handleState={handleState}
+                    handleButtonState={handleButtonState}
                     key={item.id}
                   />
                 )
@@ -101,7 +103,7 @@ export default function BurgerConstructor() {
       </div>
       <div className={`mr-2 ${constructorStyles.result}`}>
         <p className="mr-10 text text_type_digits-medium">
-          {totalPrice(ingredients)}
+          {totalPrice}
           <span className={constructorStyles.icon}>
             <CurrencyIcon type="primary" />
           </span>
@@ -117,7 +119,7 @@ export default function BurgerConstructor() {
         </Button>
       </div>
       {modalActive && !currentIngredient && (
-        <Modal>
+        <Modal handleButtonState={handleButtonState} type="order">
           <OrderDetails />
         </Modal>
       )}

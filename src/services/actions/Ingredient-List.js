@@ -11,6 +11,8 @@ export const DECREASE_COUNTER = "DECREASE_COUNTER";
 export const INCREASE_COUNTER_BUN = "INCREASE_COUNTER_BUN";
 export const DECREASE_COUNTER_BUN = "DECREASE_COUNTER_BUN";
 export const MOVING_ITEM = "MOVING_ITEM";
+export const CLEAR_CART = 'CLEAR_CART';
+export const RESET_COUNTERS = 'RESET_COUNTERS';
 
 export const addIngredient = (payload) => ({ type: ADD_ITEM, payload });
 
