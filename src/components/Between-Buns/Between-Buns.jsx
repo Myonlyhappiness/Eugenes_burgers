@@ -4,18 +4,17 @@ import elementStyles from './Between-Buns.module.css'
 import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import { useDrop,  useDrag} from 'react-dnd';
 import {useDispatch, useSelector} from 'react-redux';
-import {DELETE_ITEM, DECREASE_COUNTER, MOVING_ITEM} from '../../services/actions/Ingredient-List'
+import {DELETE_ITEM, MOVING_ITEM} from "../../services/actions/Burger-Constructor";
 
 export default function BetweenBuns({item, id, index, handleButtonState}) {
-  const constructorItems = (store) => store.menu.constructorItems
+  const constructorIngredients = (store) => store.burgerConstructor.constructorIngredients
   const ref = React.useRef(null);
   const dispatch = useDispatch();
-  const ingredients = useSelector(constructorItems);
+  const ingredients = useSelector(constructorIngredients);
 
   const deleteItem = (index, item) =>{
     dispatch({ type: DELETE_ITEM, index})
-    dispatch({ ...item, type: DECREASE_COUNTER})
-    ingredients.length === 2 && handleButtonState(true);
+    ingredients.length === 1 && handleButtonState(true);
    }
 
    const [, drop] = useDrop({

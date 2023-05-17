@@ -5,8 +5,9 @@ import modalStyles from "./Modal.module.css";
 import { CloseIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import ModalOverlay from "../Modal-Overlay/Modal-Overlay";
 import { useDispatch} from "react-redux";
-import { CLOSE_MODAL, CLEAR_CART, RESET_COUNTERS} from "../../services/actions/Ingredient-List";
-import { CLEAR_INFO_ORDER} from "../../services/actions/Order-Details"; 
+import {CLOSE_MODAL} from "../../services/actions/Ingredient-List";
+import {CLEAR_INFO_ORDER, ORDER_ITEMS} from "../../services/actions/Order-Details"; 
+import {CLEAR_CART} from "../../services/actions/Burger-Constructor";
 
 const modalRoot = document.getElementById("modal-root");
 
@@ -16,8 +17,8 @@ export default function Modal({ children, title, handleButtonState, type}) {
     if(type === "order"){
     dispatch({ type: CLOSE_MODAL, event })
     dispatch({ type: CLEAR_INFO_ORDER, event })
+    dispatch({ type: ORDER_ITEMS});
     dispatch({ type: CLEAR_CART})
-    dispatch({ type: RESET_COUNTERS})
     handleButtonState(true);
   }
   else {

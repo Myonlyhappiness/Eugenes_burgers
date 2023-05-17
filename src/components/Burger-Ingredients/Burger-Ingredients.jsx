@@ -8,12 +8,14 @@ import { useSelector } from "react-redux";
 import { useInView } from "react-intersection-observer";
 
 export default function BurgerIngredients() {
-  const menu = (store) => store.menu
-  const [bun, scrollToBuns] = useInView({ threshold: 0.1 });
-  const [sauce, scrollToSauces] = useInView({ threshold: 0.2 });
-  const [main, scrollToMain] = useInView({ threshold: 0.2 });
+  const menu = (store) => store.menu;
+  const container = React.useRef(null);
+  const [bun, scrollToBuns, bunElement] = useInView({ threshold: 0, root: container.current});
+  const [sauce, scrollToSauces, sauceElement] = useInView({ threshold: 0, root: container.current});
+  const [main, scrollToMain, mainElement] = useInView({threshold: 0.5, root: container.current});
   const [current, setCurrent] = React.useState("one");
-  const { modalActive, currentIngredient } = useSelector(menu);
+  const {currentIngredient} = useSelector(menu);
+  
 
   React.useEffect(() => {
     if (scrollToBuns) {
@@ -28,17 +30,26 @@ export default function BurgerIngredients() {
   return (
     <section className={`mr-10 ${ingredientsStyles.ingredients}`}>
       <div className={`mt-5 ${ingredientsStyles.tabs}`}>
-        <Tab value="one" active={current === "one"} onClick={setCurrent}>
+        <Tab value="one" active={current === "one"} onClick={() => {
+          setCurrent("one");
+          bunElement.target.scrollIntoView({ behavior: "smooth"});
+          }}>
           Булки
         </Tab>
-        <Tab value="two" active={current === "two"} onClick={setCurrent}>
+        <Tab value="two" active={current === "two"} onClick={() => {
+          setCurrent("two");
+          sauceElement.target.scrollIntoView({ behavior: "smooth"});
+          }}>
           Соусы
         </Tab>
-        <Tab value="three" active={current === "three"} onClick={setCurrent}>
+        <Tab value="three" active={current === "three"} onClick={() => {
+          setCurrent("three");
+          mainElement.target.scrollIntoView({ behavior: "smooth"});
+          }}>
           Начинки
         </Tab>
       </div>
-      <div className={`mt-10 ${ingredientsStyles.ingredientsList}`}>
+      <div ref={container} className={`mt-10 ${ingredientsStyles.ingredientsList}`}>
         <h2 ref={bun} className="text text_type_main-medium">
           Булки
         </h2>
@@ -51,14 +62,11 @@ export default function BurgerIngredients() {
         <div className={`pl-4 pt-6 pb-10 ${ingredientsStyles.wrapper}`}>
           <IngredientList type="sauce" />
         </div>
-        <h2 className="text text_type_main-medium">Начинки</h2>
-        <div
-          ref={main}
-          className={`pl-4 pt-6 pb-10 ${ingredientsStyles.wrapper}`}
-        >
+        <h2 ref={main} className="text text_type_main-medium">Начинки</h2>
+        <div className={`pl-4 pt-6 pb-10 ${ingredientsStyles.wrapper}`}>
           <IngredientList type="main" />
         </div>
-        {modalActive && currentIngredient && (
+        {currentIngredient && (
           <Modal title="Детали ингредиента" type="ingredient">
             <IngredientDetails item={currentIngredient} />
           </Modal>

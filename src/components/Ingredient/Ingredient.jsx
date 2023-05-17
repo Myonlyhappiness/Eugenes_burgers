@@ -8,22 +8,22 @@ import { useDispatch} from "react-redux";
 import { OPEN_MODAL } from "../../services/actions/Ingredient-List";
 import { useDrag } from "react-dnd";
 
-export function Ingredient({ item }) {
+export function Ingredient({ item, quantity}) {
   
   const dispatch = useDispatch();
   const [, ingredientRef] = useDrag({
     type: "items",
     item: item,
   });
+
   return (
     <article
       ref={ingredientRef}
       className={`pl-4 pr-4 ${ingredientStyles.ingredient}`}
       onClick={() => dispatch({ type: OPEN_MODAL, item })}
     >
-      {item.__v > 0 && (
-        <Counter count={item.__v} size="small" extraClass="m-1" />
-      )}
+      {quantity && (<Counter count={quantity} size="small" extraClass="m-1" />)}
+        
       <img
         src={item.image}
         className={ingredientStyles.image}

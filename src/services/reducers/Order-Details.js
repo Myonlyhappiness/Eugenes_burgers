@@ -2,7 +2,9 @@ import {
   GET_INFO_ORDER_REQUEST,
   GET_INFO_ORDER_FAILED,
   GET_INFO_ORDER_SUCCESS,
+  ORDER_ITEMS,
   CLEAR_INFO_ORDER
+  
 } from "../actions/Order-Details";
 
 const initialState = {
@@ -10,11 +12,19 @@ const initialState = {
   orderFailed: false,
   orderInfo: {},
   textError: "",
+  orderItems: null
 
 };
 
 export const orderReducer = (state = initialState, action) => {
   switch (action.type) {
+    
+    case ORDER_ITEMS: {
+      return {
+        ...state,
+        orderItems: action.constructorIngredients
+      };
+    }
     case GET_INFO_ORDER_REQUEST: {
       return {
         ...state,
@@ -43,7 +53,8 @@ export const orderReducer = (state = initialState, action) => {
     case CLEAR_INFO_ORDER: {
       return {
         ...state,
-        orderInfo: {}
+        orderInfo: {},
+        orderItems: null
       };
     }
 
