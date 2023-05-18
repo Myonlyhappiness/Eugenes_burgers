@@ -12,14 +12,13 @@ export default function BetweenBuns({item, id, index, handleButtonState}) {
   const dispatch = useDispatch();
   const ingredients = useSelector(constructorIngredients);
 
-  const deleteItem = (index, item) =>{
+  const deleteItem = (index) =>{
     dispatch({ type: DELETE_ITEM, index})
     ingredients.length === 1 && handleButtonState(true);
    }
 
    const [, drop] = useDrop({
     accept: "movingItems",
-    collect() { },
     hover(item, monitor) {
       if (!ref.current) {
         return;
@@ -60,11 +59,10 @@ export default function BetweenBuns({item, id, index, handleButtonState}) {
   })
 
   const opacity = isDragging ? 0 : 1;
-
   drag(drop(ref));
 
 return (
-            <div ref={ref} style={{ opacity }} className={elementStyles.wrapperElement}>
+            <div ref={ref} style={{opacity}} className={elementStyles.wrapperElement}>
                 <div className={elementStyles.element}>
                   <DragIcon type="primary" />
                 </div>
@@ -72,7 +70,7 @@ return (
                   text={item.name}
                   price={item.price}
                   thumbnail={item.image_mobile} 
-                  handleClose={() => deleteItem(index, item)}/>
+                  handleClose={() => deleteItem(index)}/>
               </div>
               )
 
