@@ -1,77 +1,112 @@
-import React from 'react';
-import Modal from '../Modal/Modal'
-import PropTypes from 'prop-types';
-import constructorStyles from './Burger-Constructor.module.css'
-import { ConstructorElement, Button, CurrencyIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import OrderDetails from '../Order-Details/Order-Details'
+import React, { useState } from "react";
+import Modal from "../Modal/Modal";
+import constructorStyles from "./Burger-Constructor.module.css";
+import {
+  Button,
+  CurrencyIcon,
+} from "@ya.praktikum/react-developer-burger-ui-components";
+import OrderDetails from "../Order-Details/Order-Details";
+import BetweenBuns from "../Between-Buns/Between-Buns";
+import Bun from "../Bun/Bun";
+import { useSelector, useDispatch } from "react-redux";
+import {OPEN_MODAL} from "../../services/actions/Ingredient-List";
+import {DELETE_BUN} from "../../services/actions/Burger-Constructor";
+import {ORDER_ITEMS} from "../../services/actions/Order-Details";
+import { createOrder } from "../../services/actions/Order-Details";
+import { useDrop } from "react-dnd";
+import { addIngredient } from "../../services/actions/Burger-Constructor";
+import { v4 as uuidv4 } from "uuid";
 
-export default function BurgerConstructor({ ingredients }) {
-  const [state, setActive] = React.useState({ active: false, event: null });
-
-
-  const handleActiveModal = (event) => {
+export default function BurgerConstructor() {
+  const [buttonState, handleButtonState] = useState(true);
+  const burgerConstructor = (store) => store.burgerConstructor;
+  const {orderItems} = useSelector((store) => store.order);
+  const {constructorBuns} = useSelector(burgerConstructor);
+  const {constructorIngredients} = useSelector(burgerConstructor);
+  const dispatch = useDispatch();
+  const makeOrder = (event) => {
     event.stopPropagation();
-    setActive({
-      ...state,
-      active: !state.active,
-    });
-  }
+    dispatch({ type: ORDER_ITEMS, constructorIngredients});
+    const ingredientsID = constructorIngredients.map((item) => item._id);
+    dispatch(createOrder(ingredientsID));
+    dispatch({ type: OPEN_MODAL });
+  };
+
+  const totalPrice = React.useMemo(
+    (() => {
+      return constructorIngredients.reduce((acc, item) => {
+      return acc + item.price;
+    }, 0);
+  }), [constructorIngredients] 
+  )
+
+  const [, dropTarget] = useDrop({
+    accept: "items",
+    drop(item) {
+      if (item.type === "bun") {
+        dispatch({ type: DELETE_BUN});
+        dispatch(addIngredient({ ...item, id: uuidv4() }));
+        constructorIngredients.length >= 1 && handleButtonState(false);
+      } else {
+        dispatch(addIngredient({ ...item, id: uuidv4() }));
+        constructorBuns && handleButtonState(false);
+      }
+    },
+  });
 
   return (
     <section className={constructorStyles.burgerContructor}>
-      <div className={`mt-5 mb-10 pl-4 ${constructorStyles.burgerContructorList}`}>
-        <div className="ml-8">
-          <ConstructorElement
-            type="top"
-            isLocked={true}
-            text="Краторная булка N-200i (верх)"
-            price={200}
-            thumbnail="https://code.s3.yandex.net/react/code/bun-02-mobile.png" />
-        </div>
-
+      <div
+        ref={dropTarget}
+        className={`mt-5 mb-10 pl-4 ${constructorStyles.burgerContructorList}`}
+      >
+           {constructorBuns && (<Bun item={constructorBuns} type="top" />)}
+          
         <div className={constructorStyles.wrapperList}>
-
-          {ingredients.map(item => {
-            return item.type != "bun" && (
-              <div className={constructorStyles.wrapperElement} key={item._id}>
-                <div className={constructorStyles.element}>
-                  <DragIcon type="primary" />
-                </div>
-
-                <ConstructorElement
-                  text={item.name}
-                  price={item.price}
-                  thumbnail={item.image_mobile} />
-              </div>
-
-            )
-          })}
-
+          {constructorIngredients.length ? (
+            constructorIngredients.map((item, index) => {
+              return (
+                (
+                  <BetweenBuns
+                    item={item}
+                    index={index}
+                    id={item.id}
+                    handleButtonState={handleButtonState}
+                    key={item.id}
+                  />
+                )
+              );
+            })
+          ) : (
+            <p className={constructorStyles.emptyListText}>
+              Перетащите сюда ингредиенты
+            </p>
+          )}
         </div>
-        <div className="ml-8">
-          <ConstructorElement
-            type="bottom"
-            isLocked={true}
-            text="Краторная булка N-200i (низ)"
-            price={200}
-            thumbnail="https://code.s3.yandex.net/react/code/bun-02-mobile.png" />
-        </div>
+        {constructorBuns && (<Bun item={constructorBuns} type="bottom" />)}
       </div>
-      <div className={`mr-2 ${constructorStyles.result}`}>
-        <p className="mr-10 text text_type_digits-medium">610<span className={constructorStyles.icon}><CurrencyIcon type="primary" /></span></p>
-        <Button htmlType="button" type="primary" size="large" onClick={handleActiveModal}>
+      <div className={`pr-4 ${constructorStyles.result}`}>
+        <p className="mr-10 text text_type_digits-medium">
+          {constructorBuns ? totalPrice + (constructorBuns.price * 2) : totalPrice}
+          <span className={constructorStyles.icon}>
+            <CurrencyIcon type="primary" />
+          </span>
+        </p>
+        <Button
+          disabled={buttonState}
+          htmlType="button"
+          type="primary"
+          size="large"
+          onClick={(event) => makeOrder(event)}
+        >
           Оформить заказ
         </Button>
       </div>
-      {state.active && (<Modal handler={handleActiveModal}>
-        <OrderDetails />
-      </Modal>
+      {orderItems && (
+        <Modal handleButtonState={handleButtonState} type="order">
+          <OrderDetails />
+        </Modal>
       )}
     </section>
-  )
-
-}
-
-BurgerConstructor.propTypes = {
-  ingredients: PropTypes.array
+  );
 }
