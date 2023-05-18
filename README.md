@@ -1,1 +1,1 @@
-https://myonlyhappiness.github.io/Eugene_burgers/
+https://myonlyhappiness.github.io/Eugenes_burgers/
